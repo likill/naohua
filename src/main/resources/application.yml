@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: AIWEB
+  spring:
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zhuaiapp
+    username: root
+    password: 123456
+
+# springdoc-openapi
+springdoc:
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.jiaxin.aiweb.controller
+# knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
