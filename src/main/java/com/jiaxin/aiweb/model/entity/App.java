@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户 实体类。
+ * 应用 实体类。
  *
  * @author 朱佳鑫
  */
@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("user")
-public class User implements Serializable {
+@Table("app")
+public class App implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -36,42 +36,53 @@ public class User implements Serializable {
     @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
 
+    /**
+     * 应用名称
+     */
+    @Column("appName")
+    private String appName;
 
     /**
-     * 账号
+     * 应用封面
      */
-    @Column("userAccount")
-    private String userAccount;
+    @Column("cover")
+    private String cover;
 
     /**
-     * 密码
+     * 应用初始化的 prompt
      */
-    @Column("userPassword")
-    private String userPassword;
+    @Column("initPrompt")
+    private String initPrompt;
 
     /**
-     * 用户昵称
+     * 代码生成类型（枚举）
      */
-    @Column("userName")
-    private String userName;
+    @Column("codeGenType")
+    private String codeGenType;
 
     /**
-     * 用户头像
+     * 部署标识
      */
-    @Column("userAvatar")
-    private String userAvatar;
+    @Column("deployKey")
+    private String deployKey;
 
     /**
-     * 用户简介
+     * 部署时间
      */
-    @Column("userProfile")
-    private String userProfile;
+    @Column("deployedTime")
+    private LocalDateTime deployedTime;
 
     /**
-     * 用户角色：user/admin
+     * 优先级
      */
-    @Column("userRole")
-    private String userRole;
+    @Column("priority")
+    private Integer priority;
+
+    /**
+     * 创建用户id
+     */
+    @Column("userId")
+    private Long userId;
 
     /**
      * 编辑时间
