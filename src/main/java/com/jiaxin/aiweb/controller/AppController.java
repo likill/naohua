@@ -2,6 +2,7 @@ package com.jiaxin.aiweb.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.DeleteRequest;
@@ -11,27 +12,27 @@ import com.jiaxin.aiweb.constant.UserConstant;
 import com.jiaxin.aiweb.exception.BusinessException;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
-import com.jiaxin.aiweb.model.dto.app.AppAddRequest;
-import com.jiaxin.aiweb.model.dto.app.AppAdminUpdateRequest;
-import com.jiaxin.aiweb.model.dto.app.AppQueryRequest;
-import com.jiaxin.aiweb.model.dto.app.AppUpdateRequest;
+import com.jiaxin.aiweb.model.dto.app.*;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 import com.jiaxin.aiweb.model.vo.AppVO;
 import com.jiaxin.aiweb.service.UserService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.jiaxin.aiweb.model.entity.App;
 import com.jiaxin.aiweb.service.AppService;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 应用 控制层。
@@ -101,7 +102,6 @@ public class AppController {
         return ResultUtils.success(result);
     }
 
-
     /**
      * 更新应用（用户只能更新自己的应用名称）
      *
@@ -167,7 +167,7 @@ public class AppController {
         // 限制每页最多 20 个
         long pageSize = appQueryRequest.getPageSize();
         ThrowUtils.throwIf(pageSize > 20, ErrorCode.PARAMS_ERROR, "每页最多查询 20 个应用");
-        long pageNum = appQueryRequest.getPageSize();
+        long pageNum = appQueryRequest.getPageNum();
         // 只查询当前用户的应用
         appQueryRequest.setUserId(loginUser.getId());
         QueryWrapper queryWrapper = appService.getQueryWrapper(appQueryRequest);
@@ -294,17 +294,65 @@ public class AppController {
      * @param request 请求对象
      * @return 生成结果流
      */
-    @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> chatToGenCode(@RequestParam Long appId,
-                                      @RequestParam String message,
-                                      HttpServletRequest request) {
-        // 参数校验
-        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID无效");
-        ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
+//    @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//    public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,
+//                                               @RequestParam String message,
+//                                               HttpServletRequest request) {
+//        // 参数校验
+//        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID无效");
+//        ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
+//        // 获取当前登录用户
+//        User loginUser = userService.getLoginUser(request);
+//        // 调用服务生成代码（流式）
+//        return appService.chatToGenCode(appId, message, loginUser);
+//    }
+@GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,
+                                                   @RequestParam String message,
+                                                   HttpServletRequest request) {
+    // 参数校验
+    ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID无效");
+    ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "用户消息不能为空");
+    // 获取当前登录用户
+    User loginUser = userService.getLoginUser(request);
+    // 调用服务生成代码（流式）
+    Flux<String> contentFlux = appService.chatToGenCode(appId, message, loginUser);
+    // 转换为 ServerSentEvent 格式
+    return contentFlux
+            .map(chunk -> {
+                // 将内容包装成JSON对象
+                Map<String, String> wrapper = Map.of("d", chunk);
+                String jsonData = JSONUtil.toJsonStr(wrapper);
+                return ServerSentEvent.<String>builder()
+                        .data(jsonData)
+                        .build();
+            })
+            .concatWith(Mono.just(
+                    // 发送结束事件
+                    ServerSentEvent.<String>builder()
+                            .event("done")
+                            .data("")
+                            .build()
+            ));
+}
+
+    /**
+     * 应用部署
+     *
+     * @param appDeployRequest 部署请求
+     * @param request          请求
+     * @return 部署 URL
+     */
+    @PostMapping("/deploy")
+    public BaseResponse<String> deployApp(@RequestBody AppDeployRequest appDeployRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(appDeployRequest == null, ErrorCode.PARAMS_ERROR);
+        Long appId = appDeployRequest.getAppId();
+        ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用 ID 不能为空");
         // 获取当前登录用户
         User loginUser = userService.getLoginUser(request);
-        // 调用服务生成代码（流式）
-        return appService.chatToGenCode(appId, message, loginUser);
+        // 调用服务部署应用
+        String deployUrl = appService.deployApp(appId, loginUser);
+        return ResultUtils.success(deployUrl);
     }
 
 
