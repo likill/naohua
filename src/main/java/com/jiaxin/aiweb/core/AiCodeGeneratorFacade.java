@@ -1,6 +1,7 @@
 package com.jiaxin.aiweb.core;
 
 import com.jiaxin.aiweb.ai.AiCodeGeneratorService;
+import com.jiaxin.aiweb.ai.AiCodeGeneratorServiceFactory;
 import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
 import com.jiaxin.aiweb.ai.model.MultiFileCodeResult;
 import com.jiaxin.aiweb.core.prase.CodeParserExecutor;
@@ -24,6 +25,8 @@ public class AiCodeGeneratorFacade {
 
     @Resource
     private AiCodeGeneratorService aiCodeGeneratorService;
+    @Resource
+    private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
 
     /**
      * 通用流式代码处理方法
@@ -88,20 +91,27 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成类型为空");
         }
+        // 根据 appId 获取对应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId, codeGenTypeEnum);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
-                yield processCodeStream(codeStream, CodeGenTypeEnum.HTML,appId);
+                yield processCodeStream(codeStream, CodeGenTypeEnum.HTML, appId);
             }
             case MULTI_FILE -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
-                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE,appId);
+                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE, appId);
+            }
+            case VUE_PROJECT -> {
+                Flux<String> codeStream = aiCodeGeneratorService.generateVueProjectCodeStream(appId, userMessage);
+                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE, appId);
             }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, errorMessage);
             }
         };
+
     }
 
 
