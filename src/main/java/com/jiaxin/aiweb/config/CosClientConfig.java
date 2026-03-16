@@ -20,6 +20,7 @@ public class CosClientConfig {
     private String secretKey;
     private String bucket;
     private String region ;
+    private String host;
 
     @Bean
     public COSClient cosClient() {

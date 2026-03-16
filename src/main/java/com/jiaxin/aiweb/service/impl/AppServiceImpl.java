@@ -19,6 +19,7 @@ import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 import com.jiaxin.aiweb.model.vo.AppVO;
 import com.jiaxin.aiweb.model.vo.UserVO;
 import com.jiaxin.aiweb.service.ChatHistoryService;
+import com.jiaxin.aiweb.service.ScreenShotService;
 import com.jiaxin.aiweb.service.UserService;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -27,6 +28,7 @@ import com.jiaxin.aiweb.mapper.AppMapper;
 import com.jiaxin.aiweb.service.AppService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -57,6 +59,9 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
     private StreamHandlerExecutor streamHandlerExecutor;
     @Resource
     private VueProjectBuilder vueProjectBuilder;
+    @Resource
+    private ScreenShotService screenShotService;
+
 
     @Override
     public AppVO getAppVO(App app) {
@@ -202,16 +207,37 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App>  implements AppS
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "部署失败：" + e.getMessage());
         }
-        // 8. 更新应用的 deployKey 和部署时间
+        // 9. 更新应用的 deployKey 和部署时间
         App updateApp = new App();
         updateApp.setId(appId);
         updateApp.setDeployKey(deployKey);
         updateApp.setDeployedTime(LocalDateTime.now());
         boolean updateResult = this.updateById(updateApp);
         ThrowUtils.throwIf(!updateResult, ErrorCode.OPERATION_ERROR, "更新应用部署信息失败");
-        // 9. 返回可访问的 URL
-        return String.format("%s/%s/", AppConstant.CODE_DEPLOY_HOST, deployKey);
+        // 10. 返回可访问的 appDeployUrl
+        String appDeployUrl = String.format("%s/%s/", AppConstant.CODE_DEPLOY_HOST, deployKey);
+        //异步截图并更新页面封面
+        generateAndUploadScreenshotAnys(appId,appDeployUrl);
+        return appDeployUrl;
+    }
 
+    /**
+     *
+     * 异步生成业务图片并更新封面
+     *
+     * @param appId  应用ID
+     * @param appUrl 应用访问地址
+     */
+    @Override
+    public void generateAndUploadScreenshotAnys(Long appId, String appUrl){
+        Thread.startVirtualThread(()->{
+            String cosURL = screenShotService.generateAndUploadScreenshot(appUrl);
+            App app = new App();
+            app.setId(appId);
+            app.setCover(cosURL);
+            boolean updateResult = this.updateById(app);
+            ThrowUtils.throwIf(!updateResult, ErrorCode.OPERATION_ERROR, "保存网页图片失败");
+        });
     }
     /**
      * 删除应用时关联删除对话历史
