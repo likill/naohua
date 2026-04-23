@@ -1,5 +1,7 @@
 package com.jiaxin.aiweb.controller;
 
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.ResultUtils;
@@ -7,35 +9,30 @@ import com.jiaxin.aiweb.constant.UserConstant;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.model.dto.chathistory.ChatHistoryQueryRequest;
+import com.jiaxin.aiweb.model.entity.ChatHistory;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.service.UserService;
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.jiaxin.aiweb.model.entity.ChatHistory;
 import com.jiaxin.aiweb.service.ChatHistoryService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 对话历史 控制层。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 @RestController
 @RequestMapping("/chatHistory")
 public class ChatHistoryController {
 
-    @Autowired
+    @Resource
     private ChatHistoryService chatHistoryService;
 
     @Resource
     private UserService userService;
-
 
     /**
      * 分页查询某个应用的对话历史（游标查询）
@@ -55,6 +52,7 @@ public class ChatHistoryController {
         Page<ChatHistory> result = chatHistoryService.listAppChatHistoryByPage(appId, pageSize, lastCreateTime, loginUser);
         return ResultUtils.success(result);
     }
+
     /**
      * 管理员分页查询所有对话历史
      *
@@ -72,7 +70,4 @@ public class ChatHistoryController {
         Page<ChatHistory> result = chatHistoryService.page(Page.of(pageNum, pageSize), queryWrapper);
         return ResultUtils.success(result);
     }
-
-
-
 }

@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 /**
  * 用户 实体类。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 @Data
 @Builder
@@ -35,7 +35,6 @@ public class User implements Serializable {
      */
     @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
-
 
     /**
      * 账号

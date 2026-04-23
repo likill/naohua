@@ -1,12 +1,11 @@
 package com.jiaxin.aiweb.core.handler;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.jiaxin.aiweb.ai.model.message.*;
-import com.jiaxin.aiweb.constant.AppConstant;
-import com.jiaxin.aiweb.core.builder.VueProjectBuilder;
+import com.jiaxin.aiweb.ai.tools.BaseTool;
+import com.jiaxin.aiweb.ai.tools.ToolManager;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.enums.ChatHistoryMessageTypeEnum;
 import com.jiaxin.aiweb.service.ChatHistoryService;
@@ -25,8 +24,9 @@ import java.util.Set;
 @Slf4j
 @Component
 public class JsonMessageStreamHandler {
+
     @Resource
-    private VueProjectBuilder vueProjectBuilder;
+    private ToolManager toolManager;
 
     /**
      * 处理 TokenStream（VUE_PROJECT）
@@ -55,9 +55,6 @@ public class JsonMessageStreamHandler {
                     // 流式响应完成后，添加 AI 消息到对话历史
                     String aiResponse = chatHistoryStringBuilder.toString();
                     chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
-                    // 异步构造 Vue 项目
-                    String projectPath = AppConstant.CODE_OUTPUT_ROOT_DIR + "/vue_project_" + appId;
-                    vueProjectBuilder.buildProjectAsync(projectPath);
                 })
                 .doOnError(error -> {
                     // 如果AI回复失败，也要记录错误消息
@@ -84,11 +81,15 @@ public class JsonMessageStreamHandler {
             case TOOL_REQUEST -> {
                 ToolRequestMessage toolRequestMessage = JSONUtil.toBean(chunk, ToolRequestMessage.class);
                 String toolId = toolRequestMessage.getId();
+                String toolName = toolRequestMessage.getName();
                 // 检查是否是第一次看到这个工具 ID
                 if (toolId != null && !seenToolIds.contains(toolId)) {
                     // 第一次调用这个工具，记录 ID 并完整返回工具信息
                     seenToolIds.add(toolId);
-                    return "\n\n[选择工具] 写入文件\n\n";
+                    // 根据工具名称获取工具实例
+                    BaseTool tool = toolManager.getTool(toolName);
+                    // 返回格式化的工具调用信息
+                    return tool.generateToolRequestResponse();
                 } else {
                     // 不是第一次调用这个工具，直接返回空
                     return "";
@@ -97,15 +98,10 @@ public class JsonMessageStreamHandler {
             case TOOL_EXECUTED -> {
                 ToolExecutedMessage toolExecutedMessage = JSONUtil.toBean(chunk, ToolExecutedMessage.class);
                 JSONObject jsonObject = JSONUtil.parseObj(toolExecutedMessage.getArguments());
-                String relativeFilePath = jsonObject.getStr("relativeFilePath");
-                String suffix = FileUtil.getSuffix(relativeFilePath);
-                String content = jsonObject.getStr("content");
-                String result = String.format("""
-                        [工具调用] 写入文件 %s
-                        ```%s
-                        %s
-                        ```
-                        """, relativeFilePath, suffix, content);
+                // 根据工具名称获取工具实例
+                String toolName = toolExecutedMessage.getName();
+                BaseTool tool = toolManager.getTool(toolName);
+                String result = tool.generateToolExecutedResult(jsonObject);
                 // 输出前端和要持久化的内容
                 String output = String.format("\n\n%s\n\n", result);
                 chatHistoryStringBuilder.append(output);
@@ -117,4 +113,4 @@ public class JsonMessageStreamHandler {
             }
         }
     }
-}
+} 

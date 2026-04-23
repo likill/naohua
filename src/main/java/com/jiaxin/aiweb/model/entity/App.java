@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 /**
  * 应用 实体类。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 @Data
 @Builder
@@ -45,7 +46,6 @@ public class App implements Serializable {
     /**
      * 应用封面
      */
-    @Column("cover")
     private String cover;
 
     /**
@@ -75,7 +75,6 @@ public class App implements Serializable {
     /**
      * 优先级
      */
-    @Column("priority")
     private Integer priority;
 
     /**

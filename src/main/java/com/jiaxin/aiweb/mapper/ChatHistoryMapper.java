@@ -6,7 +6,7 @@ import com.jiaxin.aiweb.model.entity.ChatHistory;
 /**
  * 对话历史 映射层。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 public interface ChatHistoryMapper extends BaseMapper<ChatHistory> {
 

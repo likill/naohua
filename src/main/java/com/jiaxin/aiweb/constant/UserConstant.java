@@ -1,5 +1,8 @@
 package com.jiaxin.aiweb.constant;
 
+/**
+ * 用户常量
+ */
 public interface UserConstant {
 
     /**

@@ -14,7 +14,7 @@ import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 public class MultiFileCodeFileSaverTemplate extends CodeFileSaverTemplate<MultiFileCodeResult> {
 
     @Override
-    public CodeGenTypeEnum getCodeType() {
+    protected CodeGenTypeEnum getCodeType() {
         return CodeGenTypeEnum.MULTI_FILE;
     }
 

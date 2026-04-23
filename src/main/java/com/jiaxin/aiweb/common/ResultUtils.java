@@ -1,8 +1,10 @@
 package com.jiaxin.aiweb.common;
 
-
 import com.jiaxin.aiweb.exception.ErrorCode;
 
+/**
+ * 快速构造响应结果的工具类
+ */
 public class ResultUtils {
 
     /**
@@ -47,4 +49,3 @@ public class ResultUtils {
         return new BaseResponse<>(errorCode.getCode(), null, message);
     }
 }
-

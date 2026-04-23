@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 /**
  * 对话历史 实体类。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 @Data
 @Builder
@@ -33,12 +33,8 @@ public class ChatHistory implements Serializable {
     /**
      * id
      */
-    /**
-     * id
-     */
     @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId)
     private Long id;
-
 
     /**
      * 消息

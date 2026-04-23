@@ -1,6 +1,7 @@
 package com.jiaxin.aiweb.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.mybatisflex.core.paginate.Page;
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.DeleteRequest;
@@ -12,41 +13,37 @@ import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.model.dto.user.*;
 import com.jiaxin.aiweb.model.vo.LoginUserVO;
 import com.jiaxin.aiweb.model.vo.UserVO;
-import com.mybatisflex.core.paginate.Page;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 /**
  * 用户 控制层。
  *
- * @author 朱佳鑫
+ * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  */
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    //@Autowired
     @Resource
     private UserService userService;
+
     /**
      * 用户注册
      *
      * @param userRegisterRequest 用户注册请求
      * @return 注册结果
      */
-    @PostMapping("register")
+    @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userRegisterRequest.getUserAccount();
@@ -57,11 +54,11 @@ public class UserController {
     }
 
     /**
-     *用户登录
+     * 用户登录
      *
-     * @param userLoginRequest
-     * @param request
-     * @return
+     * @param userLoginRequest 用户登录请求
+     * @param request          请求对象
+     * @return 脱敏后的用户登录信息
      */
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
@@ -78,12 +75,19 @@ public class UserController {
         return ResultUtils.success(userService.getLoginUserVO(loginUser));
     }
 
+    /**
+     * 用户注销
+     *
+     * @param request 请求对象
+     * @return
+     */
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
         boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
+
     /**
      * 创建用户
      */
@@ -172,7 +176,4 @@ public class UserController {
         userVOPage.setRecords(userVOList);
         return ResultUtils.success(userVOPage);
     }
-
-
-
 }

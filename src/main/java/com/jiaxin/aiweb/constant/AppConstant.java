@@ -1,5 +1,8 @@
 package com.jiaxin.aiweb.constant;
 
+/**
+ * 应用常量
+ */
 public interface AppConstant {
 
     /**
@@ -11,6 +14,7 @@ public interface AppConstant {
      * 默认应用优先级
      */
     Integer DEFAULT_APP_PRIORITY = 0;
+
     /**
      * 应用生成目录
      */
@@ -25,5 +29,4 @@ public interface AppConstant {
      * 应用部署域名
      */
     String CODE_DEPLOY_HOST = "http://localhost";
-
 }
