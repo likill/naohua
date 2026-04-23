@@ -2,6 +2,8 @@
 Agent自动执行并发素材搜集、代码生成、质量检查、项目构建的完整工作流，最终一键部署为可访问的Web应
 用。
 效果展示：
-<img width="2559" height="1351" alt="image" src="https://github.com/user-attachments/assets/203cb081-4308-43a0-8d9c-402ff76aec56" />
-<img width="2556" height="1345" alt="image" src="https://github.com/user-attachments/assets/4293029b-c994-46a7-8423-ea90a4af10e4" />
-<img width="2559" height="1346" alt="image" src="https://github.com/user-attachments/assets/e1e6e609-0bc0-402f-9a94-881179f9a46e" />
+<img width="1276" height="673" alt="屏幕截图 2026-04-23 112205" src="https://github.com/user-attachments/assets/9ee4e7bd-e4e5-491c-bb26-31cd05bdf708" />
+<img width="1269" height="672" alt="屏幕截图 2026-04-23 112329" src="https://github.com/user-attachments/assets/af5931b2-c1bb-4562-8ce1-952ab8dea17c" />
+<img width="1271" height="669" alt="屏幕截图 2026-04-23 112410" src="https://github.com/user-attachments/assets/526b91eb-5e96-43b5-ae77-fff824b11618" />
+
+
