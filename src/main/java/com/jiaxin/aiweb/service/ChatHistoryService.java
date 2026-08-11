@@ -1,11 +1,12 @@
 package com.jiaxin.aiweb.service;
 
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.core.service.IService;
 import com.jiaxin.aiweb.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.jiaxin.aiweb.model.entity.ChatHistory;
 import com.jiaxin.aiweb.model.entity.User;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.service.IService;
+
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 
 import java.time.LocalDateTime;

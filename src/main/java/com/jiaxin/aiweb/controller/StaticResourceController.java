@@ -1,6 +1,5 @@
 package com.jiaxin.aiweb.controller;
 
-import com.jiaxin.aiweb.constant.AppConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.HandlerMapping;
+
+import com.jiaxin.aiweb.constant.AppConstant;
 
 import java.io.File;
 

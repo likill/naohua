@@ -7,12 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 @EnableCaching
-@SpringBootApplication(exclude = RedisEmbeddingStoreAutoConfiguration.class)
-@MapperScan("com.jiaxin.aiweb.mapper")
-public class AiwebApplication {
+@SpringBootApplication(exclude = {RedisEmbeddingStoreAutoConfiguration.class})
+@MapperScan("com.yupi.yuaicodemother.mapper")
+public class YuAiCodeMotherApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AiwebApplication.class, args);
+        SpringApplication.run(YuAiCodeMotherApplication.class, args);
     }
 
 }

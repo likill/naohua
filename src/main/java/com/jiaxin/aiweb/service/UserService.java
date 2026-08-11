@@ -1,11 +1,12 @@
 package com.jiaxin.aiweb.service;
 
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.core.service.IService;
 import com.jiaxin.aiweb.model.dto.user.UserQueryRequest;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.vo.LoginUserVO;
 import com.jiaxin.aiweb.model.vo.UserVO;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.service.IService;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -43,6 +44,16 @@ public interface UserService extends IService<User> {
      * @return 脱敏后的用户信息
      */
     LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    /**
+     * 使用手机号或邮箱验证码登录；用户不存在时自动注册。
+     *
+     * @param type    验证码类型：phone/email
+     * @param target  标准化后的手机号或邮箱
+     * @param request 请求对象
+     * @return 脱敏后的登录用户信息
+     */
+    LoginUserVO userLoginByCode(String type, String target, HttpServletRequest request);
 
     /**
      * 获取当前登录用户

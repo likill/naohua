@@ -1,7 +1,7 @@
 package com.jiaxin.aiweb.mapper;
 
-import com.mybatisflex.core.BaseMapper;
 import com.jiaxin.aiweb.model.entity.App;
+import com.mybatisflex.core.BaseMapper;
 
 /**
  * 应用 映射层。

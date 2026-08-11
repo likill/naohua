@@ -3,27 +3,31 @@ package com.jiaxin.aiweb.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
+
 import com.jiaxin.aiweb.exception.BusinessException;
 import com.jiaxin.aiweb.exception.ErrorCode;
+import com.jiaxin.aiweb.mapper.UserMapper;
 import com.jiaxin.aiweb.model.dto.user.UserQueryRequest;
 import com.jiaxin.aiweb.model.entity.User;
-import com.jiaxin.aiweb.mapper.UserMapper;
 import com.jiaxin.aiweb.model.enums.UserRoleEnum;
+import com.jiaxin.aiweb.model.enums.VerificationCodeTypeEnum;
 import com.jiaxin.aiweb.model.vo.LoginUserVO;
 import com.jiaxin.aiweb.model.vo.UserVO;
 import com.jiaxin.aiweb.service.UserService;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import static com.jiaxin.aiweb.constant.UserConstant.USER_LOGIN_STATE;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.jiaxin.aiweb.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户 服务层实现。
@@ -109,6 +113,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public LoginUserVO userLoginByCode(String type, String target, HttpServletRequest request) {
+        if (StrUtil.hasBlank(type, target)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        VerificationCodeTypeEnum typeEnum = VerificationCodeTypeEnum.getEnumByValue(type);
+        if (typeEnum == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "验证码类型错误");
+        }
+        String fieldName = VerificationCodeTypeEnum.PHONE.equals(typeEnum) ? "phone" : "email";
+        User user = getUserByContact(fieldName, target);
+        if (user == null) {
+            user = createUserByContact(typeEnum, fieldName, target);
+        }
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        return this.getLoginUserVO(user);
+    }
+
+    @Override
     public User getLoginUser(HttpServletRequest request) {
         // 先判断用户是否登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
@@ -164,6 +186,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Long id = userQueryRequest.getId();
         String userAccount = userQueryRequest.getUserAccount();
+        String phone = userQueryRequest.getPhone();
+        String email = userQueryRequest.getEmail();
         String userName = userQueryRequest.getUserName();
         String userProfile = userQueryRequest.getUserProfile();
         String userRole = userQueryRequest.getUserRole();
@@ -173,6 +197,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .eq("id", id) // where id = ${id}
                 .eq("userRole", userRole) // and userRole = ${userRole}
                 .like("userAccount", userAccount)
+                .eq("phone", phone)
+                .eq("email", email)
                 .like("userName", userName)
                 .like("userProfile", userProfile)
                 .orderBy(sortField, "ascend".equals(sortOrder));
@@ -183,5 +209,55 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 盐值，混淆密码
         final String SALT = "yupi";
         return DigestUtils.md5DigestAsHex((userPassword + SALT).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private User getUserByContact(String fieldName, String target) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq(fieldName, target);
+        return this.mapper.selectOneByQuery(queryWrapper);
+    }
+
+    private User createUserByContact(VerificationCodeTypeEnum typeEnum, String fieldName, String target) {
+        User user = new User();
+        user.setUserAccount(generateCodeUserAccount(typeEnum, target));
+        user.setUserPassword(getEncryptPassword(UUID.randomUUID().toString()));
+        user.setUserName(generateCodeUserName(typeEnum, target));
+        user.setUserRole(UserRoleEnum.USER.getValue());
+        if (VerificationCodeTypeEnum.PHONE.equals(typeEnum)) {
+            user.setPhone(target);
+        } else {
+            user.setEmail(target);
+        }
+        try {
+            boolean saveResult = this.save(user);
+            if (!saveResult) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "注册失败，数据库错误");
+            }
+            return user;
+        } catch (RuntimeException e) {
+            User existedUser = getUserByContact(fieldName, target);
+            if (existedUser != null) {
+                return existedUser;
+            }
+            throw e;
+        }
+    }
+
+    private String generateCodeUserAccount(VerificationCodeTypeEnum typeEnum, String target) {
+        String digest = DigestUtils.md5DigestAsHex((typeEnum.getValue() + ":" + target)
+                .getBytes(StandardCharsets.UTF_8));
+        return typeEnum.getValue() + "_" + digest;
+    }
+
+    private String generateCodeUserName(VerificationCodeTypeEnum typeEnum, String target) {
+        if (VerificationCodeTypeEnum.PHONE.equals(typeEnum)) {
+            return "手机用户" + target.substring(Math.max(0, target.length() - 4));
+        }
+        int atIndex = target.indexOf('@');
+        String prefix = atIndex > 0 ? target.substring(0, atIndex) : target;
+        if (prefix.length() <= 2) {
+            return "邮箱用户" + prefix;
+        }
+        return "邮箱用户" + prefix.charAt(0) + "***" + prefix.charAt(prefix.length() - 1);
     }
 }

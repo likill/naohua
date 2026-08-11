@@ -1,11 +1,12 @@
 package com.jiaxin.aiweb.model.dto.chathistory;
 
-import com.jiaxin.aiweb.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.jiaxin.aiweb.common.PageRequest;
 
 /**
  * 对话历史查询请求

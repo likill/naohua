@@ -1,6 +1,7 @@
 package com.jiaxin.aiweb.ai;
 
 import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
+
 import dev.langchain4j.service.SystemMessage;
 
 /**

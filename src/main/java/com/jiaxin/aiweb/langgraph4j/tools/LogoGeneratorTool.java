@@ -6,6 +6,7 @@ import com.alibaba.dashscope.aigc.imagesynthesis.ImageSynthesisParam;
 import com.alibaba.dashscope.aigc.imagesynthesis.ImageSynthesisResult;
 import com.jiaxin.aiweb.langgraph4j.model.ImageResource;
 import com.jiaxin.aiweb.langgraph4j.model.enums.ImageCategoryEnum;
+
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.extern.slf4j.Slf4j;

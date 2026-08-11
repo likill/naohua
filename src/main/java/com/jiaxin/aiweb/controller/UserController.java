@@ -1,7 +1,7 @@
 package com.jiaxin.aiweb.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.mybatisflex.core.paginate.Page;
+
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.DeleteRequest;
@@ -11,16 +11,19 @@ import com.jiaxin.aiweb.exception.BusinessException;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.model.dto.user.*;
+import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.vo.LoginUserVO;
 import com.jiaxin.aiweb.model.vo.UserVO;
+import com.jiaxin.aiweb.service.UserService;
+import com.jiaxin.aiweb.service.VerificationCodeService;
+import com.mybatisflex.core.paginate.Page;
+
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.jiaxin.aiweb.model.entity.User;
-import com.jiaxin.aiweb.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -36,6 +39,9 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private VerificationCodeService verificationCodeService;
 
     /**
      * 用户注册
@@ -66,6 +72,29 @@ public class UserController {
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
+        return ResultUtils.success(loginUserVO);
+    }
+
+    /**
+     * 发送手机/邮箱验证码。
+     */
+    @PostMapping("/code/send")
+    public BaseResponse<Boolean> sendVerificationCode(@RequestBody VerificationCodeSendRequest verificationCodeSendRequest,
+                                                      HttpServletRequest request) {
+        ThrowUtils.throwIf(verificationCodeSendRequest == null, ErrorCode.PARAMS_ERROR);
+        verificationCodeService.sendCode(verificationCodeSendRequest, request);
+        return ResultUtils.success(true);
+    }
+
+    /**
+     * 手机/邮箱验证码登录；用户不存在时自动注册。
+     */
+    @PostMapping("/code/login")
+    public BaseResponse<LoginUserVO> loginByVerificationCode(
+            @RequestBody VerificationCodeLoginRequest verificationCodeLoginRequest,
+            HttpServletRequest request) {
+        ThrowUtils.throwIf(verificationCodeLoginRequest == null, ErrorCode.PARAMS_ERROR);
+        LoginUserVO loginUserVO = verificationCodeService.loginByCode(verificationCodeLoginRequest, request);
         return ResultUtils.success(loginUserVO);
     }
 

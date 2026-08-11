@@ -47,7 +47,7 @@ public class MyBatisCodeGenerator {
 
         // 设置根包，建议先生成到一个临时目录下，生成代码之后，再移动到对应的项目目录
         globalConfig.getPackageConfig()
-                .setBasePackage("com.jiaxin.aiweb.genresult");
+                .setBasePackage("com.yupi.yuaicodemother.genresult");
 
         // 设置表前缀和只生成哪些表，setGenerateTable 未配置时，生成所有表
         globalConfig.getStrategyConfig()

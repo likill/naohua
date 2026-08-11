@@ -1,6 +1,5 @@
 package com.jiaxin.aiweb.langgraph4j.model;
 
-import com.jiaxin.aiweb.langgraph4j.model.enums.ImageCategoryEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+
+import com.jiaxin.aiweb.langgraph4j.model.enums.ImageCategoryEnum;
 
 /**
  * 图片资源对象

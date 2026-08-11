@@ -2,20 +2,22 @@ package com.jiaxin.aiweb.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
+
 import com.jiaxin.aiweb.constant.UserConstant;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
+import com.jiaxin.aiweb.mapper.ChatHistoryMapper;
 import com.jiaxin.aiweb.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.jiaxin.aiweb.model.entity.App;
 import com.jiaxin.aiweb.model.entity.ChatHistory;
-import com.jiaxin.aiweb.mapper.ChatHistoryMapper;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.enums.ChatHistoryMessageTypeEnum;
 import com.jiaxin.aiweb.service.AppService;
 import com.jiaxin.aiweb.service.ChatHistoryService;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
+
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;

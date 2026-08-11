@@ -1,10 +1,11 @@
 package com.jiaxin.aiweb.model.dto.app;
 
-import com.jiaxin.aiweb.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+
+import com.jiaxin.aiweb.common.PageRequest;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

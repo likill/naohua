@@ -1,7 +1,5 @@
 package com.jiaxin.aiweb.controller;
 
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.ResultUtils;
@@ -11,11 +9,14 @@ import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.model.dto.chathistory.ChatHistoryQueryRequest;
 import com.jiaxin.aiweb.model.entity.ChatHistory;
 import com.jiaxin.aiweb.model.entity.User;
+import com.jiaxin.aiweb.service.ChatHistoryService;
 import com.jiaxin.aiweb.service.UserService;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
-import com.jiaxin.aiweb.service.ChatHistoryService;
 
 import java.time.LocalDateTime;
 

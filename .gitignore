@@ -1,9 +1,20 @@
 ### CUSTOM ###
 application-local.yml
 application-prod.yml
+application-prod-n.yml
+application-prod-new.yml
 application-dev.yml
 application-prod-sample.yml
 tmp
+
+.mvn
+.agents
+.claude
+.trae
+
+src/review-checklist.md
+
+
 
 HELP.md
 target/

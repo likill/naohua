@@ -7,7 +7,7 @@
       <router-view />
     </a-layout-content>
     <!-- 底部版权信息 -->
-    <!-- <GlobalFooter /> -->
+    <GlobalFooter />
   </a-layout>
 </template>
 

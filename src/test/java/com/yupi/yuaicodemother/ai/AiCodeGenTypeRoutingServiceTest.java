@@ -1,10 +1,12 @@
-package com.jiaxin.aiweb.ai;
+package com.yupi.yuaicodemother.ai;
 
-import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.jiaxin.aiweb.ai.AiCodeGenTypeRoutingService;
+import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: nanhua-backend
+    name: yu-ai-code-mother-backend
   # session 配置
   session:
     store-type: redis
@@ -20,8 +20,21 @@ spring:
       database: 0
       password:
       ttl: 3600 # 缓存过期时间（秒）
+  # 阿里云邮件推送（DirectMail）SMTP 配置
+  # host 固定可用 smtpdm.aliyun.com；username/password 填阿里云邮件推送控制台生成的 SMTP 账号和密码
+  mail:
+    host: smtpdm.aliyun.com
+    port: 465
+    username: your-direct-mail-smtp-username
+    password: your-direct-mail-smtp-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
   profiles:
-    active: dev
+    active: prod
 server:
   port: 8123
   servlet:
@@ -35,7 +48,7 @@ springdoc:
   group-configs:
     - group: 'default'
       paths-to-match: '/**'
-      packages-to-scan: com.jiaxin.aiweb.controller
+      packages-to-scan: com.yupi.yuaicodemother.controller
 # knife4j
 knife4j:
   enable: true
@@ -46,8 +59,8 @@ langchain4j:
   open-ai:
     chat-model:
       base-url: https://api.deepseek.com
-      api-key: <Your API Key>
-      model-name: deepseek-chat
+#      api-key: <Your API Key>
+      model-name: deepseek-v4-flash
 #      strict-json-schema: true
 #      response-format: json_object
       max-tokens: 8192
@@ -56,25 +69,25 @@ langchain4j:
       max-retries: 3
     streaming-chat-model:
       base-url: https://api.deepseek.com
-      api-key: <Your API Key>
-      model-name: deepseek-chat
+#      api-key: <Your API Key>
+      model-name: deepseek-v4-flash
       max-tokens: 8192
       log-requests: true
       log-responses: true
     # 推理 AI 模型配置（用于复杂的推理任务）
     reasoning-streaming-chat-model:
       base-url: https://api.deepseek.com
-      api-key: <Your API Key>
-      model-name: deepseek-reasoner
+#      api-key: <Your API Key>
+      model-name: deepseek-v4-flash
       max-tokens: 32768
       temperature: 0.1
       log-requests: true
       log-responses: true
     # 智能路由 AI 模型配置（用于简单的分类任务）
     routing-chat-model:
-      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      api-key: <Your API Key>
-      model-name: qwen-turbo
+      base-url: https://api.deepseek.com
+#      api-key: <Your API Key>
+      model-name: deepseek-v4-flash
       max-tokens: 100
       log-requests: true
       log-responses: true
@@ -88,10 +101,32 @@ cos:
     bucket: your-bucket-name
 # Pexels 图片搜索配置
 pexels:
-  api-key: <Your API Key>
+#  api-key: <Your API Key>
+# 统一验证码登录/注册
+auth:
+  code:
+    expire-minutes: 5
+    resend-interval-seconds: 60
+    daily-target-limit: 10
+    hourly-ip-limit: 60
+    max-fail-count: 5
+    fail-lock-minutes: 15
+    sms:
+      # 阿里云短信服务 AccessKey
+      access-key-id: your-aliyun-sms-access-key-id
+      access-key-secret: your-aliyun-sms-access-key-secret
+      # 一般使用 cn-hangzhou 即可
+      region-id: cn-hangzhou
+      # 已审核通过的短信签名和模板 Code，模板变量必须包含 ${code}
+      sign-name: your-sms-sign-name
+      template-code: your-sms-template-code
+    mail:
+      # 发信地址，需要和阿里云邮件推送里配置/验证的发信地址一致
+      from: your-sender@example.com
+      subject: 脑花登录验证码
 # 阿里云 DashScope 配置
 dashscope:
-  api-key: <Your API Key>
+#  api-key: <Your API Key>
   image-model: wan2.2-t2i-flash
 # 监控
 management:

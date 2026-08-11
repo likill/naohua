@@ -1,6 +1,5 @@
 package com.jiaxin.aiweb.config;
 
-import com.jiaxin.aiweb.monitor.AiModelMonitorListener;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import jakarta.annotation.Resource;
@@ -9,6 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+
+import com.jiaxin.aiweb.monitor.AiModelMonitorListener;
 
 import java.util.List;
 

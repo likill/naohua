@@ -1,9 +1,9 @@
 package com.jiaxin.aiweb.core.parser;
 
-import com.jiaxin.aiweb.ai.model.MultiFileCodeResult;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.jiaxin.aiweb.ai.model.MultiFileCodeResult;
 
 /**
  * 多文件代码解析器（HTML + CSS + JS）

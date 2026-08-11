@@ -43,60 +43,163 @@
             <p class="form-subtitle">开启您的创意之旅</p>
           </div>
 
-          <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
-            <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入账号' }]">
-              <a-input v-model:value="formState.userAccount" placeholder="请输入账号" size="large">
-                <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                </template>
-              </a-input>
-            </a-form-item>
-            <a-form-item
-              name="userPassword"
-              :rules="[
-                { required: true, message: '请输入密码' },
-                { min: 8, message: '密码不能小于 8 位' },
-              ]"
-            >
-              <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" size="large">
-                <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                </template>
-              </a-input-password>
-            </a-form-item>
-            <a-form-item
-              name="checkPassword"
-              :rules="[
-                { required: true, message: '请确认密码' },
-                { min: 8, message: '密码不能小于 8 位' },
-                { validator: validateCheckPassword },
-              ]"
-            >
-              <a-input-password v-model:value="formState.checkPassword" placeholder="请确认密码" size="large">
-                <template #prefix>
-                  <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                </template>
-              </a-input-password>
-            </a-form-item>
+          <a-tabs :active-key="activeRegisterMode" class="register-tabs" @change="handleRegisterModeChange">
+            <a-tab-pane key="phone" tab="手机号注册">
+              <a-form :model="codeFormState" name="phoneCodeRegister" autocomplete="off" @finish="handleCodeRegister">
+                <a-form-item name="target" :rules="[{ required: true, message: '请输入手机号' }]">
+                  <a-input v-model:value="codeFormState.target" placeholder="+8613812345678 或 13812345678" size="large">
+                    <template #prefix>
+                      <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.6a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.48-1.2a2 2 0 0 1 2.11-.45c.83.3 1.7.51 2.6.63A2 2 0 0 1 22 16.92z"/>
+                      </svg>
+                    </template>
+                  </a-input>
+                </a-form-item>
+                <a-form-item
+                  name="code"
+                  :rules="[
+                    { required: true, message: '请输入验证码' },
+                    { len: 6, message: '验证码为 6 位' },
+                  ]"
+                >
+                  <div class="code-row">
+                    <a-input v-model:value="codeFormState.code" placeholder="请输入验证码" size="large" maxlength="6">
+                      <template #prefix>
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="11" width="18" height="10" rx="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      </template>
+                    </a-input>
+                    <a-button
+                      html-type="button"
+                      class="code-btn"
+                      :disabled="codeCountdown > 0"
+                      @click="handleSendCode"
+                    >
+                      {{ codeCountdown > 0 ? `${codeCountdown}s` : '获取验证码' }}
+                    </a-button>
+                  </div>
+                </a-form-item>
 
-            <div class="tips">
-              已有账号？
-              <RouterLink to="/user/login" class="link">立即登录</RouterLink>
-            </div>
+                <div class="tips">
+                  已有账号？
+                  <RouterLink to="/user/login" class="link">立即登录</RouterLink>
+                </div>
 
-            <a-form-item>
-              <a-button type="primary" html-type="submit" class="submit-btn">注 册</a-button>
-            </a-form-item>
-          </a-form>
+                <a-form-item>
+                  <a-button type="primary" html-type="submit" class="submit-btn">注册并登录</a-button>
+                </a-form-item>
+              </a-form>
+            </a-tab-pane>
+
+            <a-tab-pane key="email" tab="邮箱注册">
+              <a-form :model="codeFormState" name="emailCodeRegister" autocomplete="off" @finish="handleCodeRegister">
+                <a-form-item name="target" :rules="[{ required: true, message: '请输入邮箱' }]">
+                  <a-input v-model:value="codeFormState.target" placeholder="user@example.com" size="large">
+                    <template #prefix>
+                      <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="m3 7 9 6 9-6"/>
+                      </svg>
+                    </template>
+                  </a-input>
+                </a-form-item>
+                <a-form-item
+                  name="code"
+                  :rules="[
+                    { required: true, message: '请输入验证码' },
+                    { len: 6, message: '验证码为 6 位' },
+                  ]"
+                >
+                  <div class="code-row">
+                    <a-input v-model:value="codeFormState.code" placeholder="请输入验证码" size="large" maxlength="6">
+                      <template #prefix>
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="11" width="18" height="10" rx="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      </template>
+                    </a-input>
+                    <a-button
+                      html-type="button"
+                      class="code-btn"
+                      :disabled="codeCountdown > 0"
+                      @click="handleSendCode"
+                    >
+                      {{ codeCountdown > 0 ? `${codeCountdown}s` : '获取验证码' }}
+                    </a-button>
+                  </div>
+                </a-form-item>
+
+                <div class="tips">
+                  已有账号？
+                  <RouterLink to="/user/login" class="link">立即登录</RouterLink>
+                </div>
+
+                <a-form-item>
+                  <a-button type="primary" html-type="submit" class="submit-btn">注册并登录</a-button>
+                </a-form-item>
+              </a-form>
+            </a-tab-pane>
+
+            <a-tab-pane key="password" tab="账号注册">
+              <a-form :model="formState" name="passwordRegister" autocomplete="off" @finish="handlePasswordRegister">
+                <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入账号' }]">
+                  <a-input v-model:value="formState.userAccount" placeholder="请输入账号" size="large">
+                    <template #prefix>
+                      <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </template>
+                  </a-input>
+                </a-form-item>
+                <a-form-item
+                  name="userPassword"
+                  :rules="[
+                    { required: true, message: '请输入密码' },
+                    { min: 8, message: '密码不能小于 8 位' },
+                  ]"
+                >
+                  <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" size="large">
+                    <template #prefix>
+                      <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                    </template>
+                  </a-input-password>
+                </a-form-item>
+                <a-form-item
+                  name="checkPassword"
+                  :rules="[
+                    { required: true, message: '请确认密码' },
+                    { min: 8, message: '密码不能小于 8 位' },
+                    { validator: validateCheckPassword },
+                  ]"
+                >
+                  <a-input-password v-model:value="formState.checkPassword" placeholder="请确认密码" size="large">
+                    <template #prefix>
+                      <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                    </template>
+                  </a-input-password>
+                </a-form-item>
+
+                <div class="tips">
+                  已有账号？
+                  <RouterLink to="/user/login" class="link">立即登录</RouterLink>
+                </div>
+
+                <a-form-item>
+                  <a-button type="primary" html-type="submit" class="submit-btn">注 册</a-button>
+                </a-form-item>
+              </a-form>
+            </a-tab-pane>
+          </a-tabs>
         </div>
       </div>
     </div>
@@ -106,17 +209,54 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { userRegister } from '@/api/userController.ts'
+import {
+  loginByVerificationCode,
+  sendVerificationCode,
+  userRegister,
+} from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
-import { reactive } from 'vue'
+import { computed, onUnmounted, reactive, ref } from 'vue'
+import { useLoginUserStore } from '@/stores/loginUser.ts'
+
+type CodeRegisterType = 'phone' | 'email'
+type RegisterMode = CodeRegisterType | 'password'
 
 const router = useRouter()
+const loginUserStore = useLoginUserStore()
 
 const formState = reactive<API.UserRegisterRequest>({
   userAccount: '',
   userPassword: '',
   checkPassword: '',
 })
+
+const codeFormState = reactive<API.VerificationCodeLoginRequest>({
+  type: 'phone',
+  target: '',
+  code: '',
+})
+
+const activeRegisterMode = ref<RegisterMode>('phone')
+const countdownMap = reactive<Record<CodeRegisterType, number>>({
+  phone: 0,
+  email: 0,
+})
+let countdownTimer: ReturnType<typeof window.setInterval> | undefined
+
+const codeRegisterType = computed<CodeRegisterType>(() =>
+  activeRegisterMode.value === 'email' ? 'email' : 'phone',
+)
+const codeCountdown = computed(() => countdownMap[codeRegisterType.value])
+
+const handleRegisterModeChange = (key: string | number) => {
+  const nextMode = String(key) as RegisterMode
+  activeRegisterMode.value = nextMode
+  if (nextMode === 'phone' || nextMode === 'email') {
+    codeFormState.type = nextMode
+    codeFormState.target = ''
+    codeFormState.code = ''
+  }
+}
 
 const validateCheckPassword = (rule: unknown, value: string, callback: (error?: Error) => void) => {
   if (value && value !== formState.userPassword) {
@@ -126,7 +266,7 @@ const validateCheckPassword = (rule: unknown, value: string, callback: (error?: 
   }
 }
 
-const handleSubmit = async (values: API.UserRegisterRequest) => {
+const handlePasswordRegister = async (values: API.UserRegisterRequest) => {
   const res = await userRegister(values)
   if (res.data.code === 0) {
     message.success('注册成功')
@@ -138,6 +278,68 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
     message.error('注册失败，' + res.data.message)
   }
 }
+
+const handleSendCode = async () => {
+  const type = codeRegisterType.value
+  if (!codeFormState.target) {
+    message.warning(type === 'phone' ? '请先输入手机号' : '请先输入邮箱')
+    return
+  }
+  const res = await sendVerificationCode({
+    type,
+    target: codeFormState.target,
+  })
+  if (res.data.code === 0) {
+    message.success('验证码已发送')
+    startCountdown(type)
+  } else {
+    message.error('发送失败，' + res.data.message)
+  }
+}
+
+const handleCodeRegister = async () => {
+  const type = codeRegisterType.value
+  const res = await loginByVerificationCode({
+    type,
+    target: codeFormState.target,
+    code: codeFormState.code,
+  })
+  if (res.data.code === 0 && res.data.data) {
+    await loginUserStore.fetchLoginUser()
+    message.success('注册并登录成功')
+    router.push('/')
+  } else {
+    message.error('注册失败，' + res.data.message)
+  }
+}
+
+const startCountdown = (type: CodeRegisterType) => {
+  countdownMap[type] = 60
+  if (countdownTimer) {
+    return
+  }
+  countdownTimer = window.setInterval(() => {
+    let hasRunningCountdown = false
+    ;(['phone', 'email'] as CodeRegisterType[]).forEach((item) => {
+      if (countdownMap[item] > 0) {
+        countdownMap[item] -= 1
+      }
+      if (countdownMap[item] > 0) {
+        hasRunningCountdown = true
+      }
+    })
+    if (!hasRunningCountdown && countdownTimer) {
+      window.clearInterval(countdownTimer)
+      countdownTimer = undefined
+    }
+  }, 1000)
+}
+
+onUnmounted(() => {
+  if (countdownTimer) {
+    window.clearInterval(countdownTimer)
+  }
+})
 </script>
 
 <style scoped>
@@ -287,7 +489,7 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
 
 .form-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 430px;
   background: #fff;
   border-radius: 20px;
   padding: 40px;
@@ -312,7 +514,19 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
 }
 
 .form-header {
-  margin-bottom: 32px;
+  margin-bottom: 16px;
+}
+
+.register-tabs {
+  margin-top: 8px;
+}
+
+:deep(.ant-tabs-nav) {
+  margin-bottom: 24px;
+}
+
+:deep(.ant-tabs-tab) {
+  font-size: 15px;
 }
 
 .form-title {
@@ -415,6 +629,25 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
   text-decoration: underline;
 }
 
+.code-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  gap: 10px;
+}
+
+.code-btn {
+  height: 48px;
+  border: 2px solid #DC143C;
+  border-radius: 12px;
+  color: #DC143C;
+  font-weight: 600;
+}
+
+.code-btn:hover {
+  border-color: #CD5C5C;
+  color: #CD5C5C;
+}
+
 /* 提交按钮 */
 .submit-btn {
   width: 100%;
@@ -495,6 +728,10 @@ const handleSubmit = async (values: API.UserRegisterRequest) => {
 
   .form-card {
     animation: none;
+  }
+
+  .code-row {
+    grid-template-columns: 1fr;
   }
 }
 </style>

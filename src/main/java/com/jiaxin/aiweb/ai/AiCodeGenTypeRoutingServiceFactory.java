@@ -1,12 +1,13 @@
 package com.jiaxin.aiweb.ai;
 
-import com.jiaxin.aiweb.utils.SpringContextUtil;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.jiaxin.aiweb.utils.SpringContextUtil;
 
 /**
  * AI代码生成类型路由服务工厂

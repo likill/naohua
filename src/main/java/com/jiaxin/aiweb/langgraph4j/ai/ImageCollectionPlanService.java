@@ -1,6 +1,7 @@
 package com.jiaxin.aiweb.langgraph4j.ai;
 
 import com.jiaxin.aiweb.langgraph4j.model.ImageCollectionPlan;
+
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 

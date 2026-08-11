@@ -1,10 +1,11 @@
 package com.jiaxin.aiweb.model.dto.user;
 
-import com.jiaxin.aiweb.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+
+import com.jiaxin.aiweb.common.PageRequest;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,6 +25,16 @@ public class UserQueryRequest extends PageRequest implements Serializable {
      * 账号
      */
     private String userAccount;
+
+    /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 邮箱
+     */
+    private String email;
 
     /**
      * 简介

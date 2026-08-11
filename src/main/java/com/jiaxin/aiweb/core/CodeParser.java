@@ -1,10 +1,10 @@
 package com.jiaxin.aiweb.core;
 
-import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
-import com.jiaxin.aiweb.ai.model.MultiFileCodeResult;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
+import com.jiaxin.aiweb.ai.model.MultiFileCodeResult;
 
 /**
  * 代码解析器

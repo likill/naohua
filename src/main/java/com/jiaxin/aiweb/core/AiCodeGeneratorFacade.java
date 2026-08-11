@@ -1,6 +1,13 @@
 package com.jiaxin.aiweb.core;
 
 import cn.hutool.json.JSONUtil;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.tool.ToolExecution;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import com.jiaxin.aiweb.ai.AiCodeGeneratorService;
 import com.jiaxin.aiweb.ai.AiCodeGeneratorServiceFactory;
 import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
@@ -15,12 +22,7 @@ import com.jiaxin.aiweb.core.saver.CodeFileSaverExecutor;
 import com.jiaxin.aiweb.exception.BusinessException;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.service.TokenStream;
-import dev.langchain4j.service.tool.ToolExecution;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+
 import reactor.core.publisher.Flux;
 
 import java.io.File;

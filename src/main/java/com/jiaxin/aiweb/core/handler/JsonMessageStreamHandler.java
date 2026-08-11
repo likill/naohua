@@ -3,15 +3,17 @@ package com.jiaxin.aiweb.core.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import com.jiaxin.aiweb.ai.model.message.*;
 import com.jiaxin.aiweb.ai.tools.BaseTool;
 import com.jiaxin.aiweb.ai.tools.ToolManager;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.enums.ChatHistoryMessageTypeEnum;
 import com.jiaxin.aiweb.service.ChatHistoryService;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+
 import reactor.core.publisher.Flux;
 
 import java.util.HashSet;

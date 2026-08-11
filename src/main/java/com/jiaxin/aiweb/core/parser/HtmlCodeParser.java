@@ -1,9 +1,9 @@
 package com.jiaxin.aiweb.core.parser;
 
-import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.jiaxin.aiweb.ai.model.HtmlCodeResult;
 
 /**
  * HTML 单文件代码解析器

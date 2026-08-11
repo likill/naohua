@@ -2,14 +2,15 @@ package com.jiaxin.aiweb.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.manager.CosManager;
 import com.jiaxin.aiweb.service.ScreenshotService;
 import com.jiaxin.aiweb.utils.WebScreenshotUtils;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.time.LocalDate;

@@ -1,10 +1,6 @@
 package com.jiaxin.aiweb.exception;
 
 import cn.hutool.json.JSONUtil;
-import com.jiaxin.aiweb.common.BaseResponse;
-import com.jiaxin.aiweb.common.ResultUtils;
-import com.jiaxin.aiweb.exception.BusinessException;
-import com.jiaxin.aiweb.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.jiaxin.aiweb.common.BaseResponse;
+import com.jiaxin.aiweb.common.ResultUtils;
+import com.jiaxin.aiweb.exception.BusinessException;
+import com.jiaxin.aiweb.exception.ErrorCode;
 
 import java.io.IOException;
 import java.util.Map;

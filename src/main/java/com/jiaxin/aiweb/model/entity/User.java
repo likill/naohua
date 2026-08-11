@@ -49,6 +49,18 @@ public class User implements Serializable {
     private String userPassword;
 
     /**
+     * 手机号
+     */
+    @Column("phone")
+    private String phone;
+
+    /**
+     * 邮箱
+     */
+    @Column("email")
+    private String email;
+
+    /**
      * 用户昵称
      */
     @Column("userName")

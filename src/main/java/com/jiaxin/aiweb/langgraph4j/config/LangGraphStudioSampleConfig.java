@@ -1,10 +1,11 @@
 package com.jiaxin.aiweb.langgraph4j.config;
 
-import com.jiaxin.aiweb.langgraph4j.CodeGenWorkflow;
 import org.bsc.langgraph4j.GraphStateException;
 import org.bsc.langgraph4j.studio.springboot.AbstractLangGraphStudioConfig;
 import org.bsc.langgraph4j.studio.springboot.LangGraphFlow;
 import org.springframework.context.annotation.Configuration;
+
+import com.jiaxin.aiweb.langgraph4j.CodeGenWorkflow;
 
 /**
  * 可视化调试配置（实际上很难使用）

@@ -1,10 +1,10 @@
-package com.jiaxin.aiweb;
+package com.yupi.yuaicodemother;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AiwebApplicationTests {
+class YuAiCodeMotherApplicationTests {
 
     @Test
     void contextLoads() {

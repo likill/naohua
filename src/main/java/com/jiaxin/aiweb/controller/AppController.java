@@ -3,8 +3,7 @@ package com.jiaxin.aiweb.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryWrapper;
+
 import com.jiaxin.aiweb.annotation.AuthCheck;
 import com.jiaxin.aiweb.common.BaseResponse;
 import com.jiaxin.aiweb.common.DeleteRequest;
@@ -15,12 +14,17 @@ import com.jiaxin.aiweb.exception.BusinessException;
 import com.jiaxin.aiweb.exception.ErrorCode;
 import com.jiaxin.aiweb.exception.ThrowUtils;
 import com.jiaxin.aiweb.model.dto.app.*;
+import com.jiaxin.aiweb.model.entity.App;
 import com.jiaxin.aiweb.model.entity.User;
 import com.jiaxin.aiweb.model.vo.AppVO;
 import com.jiaxin.aiweb.ratelimter.annotation.RateLimit;
 import com.jiaxin.aiweb.ratelimter.enums.RateLimitType;
+import com.jiaxin.aiweb.service.AppService;
 import com.jiaxin.aiweb.service.ProjectDownloadService;
 import com.jiaxin.aiweb.service.UserService;
+import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
+
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,8 +32,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
-import com.jiaxin.aiweb.model.entity.App;
-import com.jiaxin.aiweb.service.AppService;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -266,7 +269,7 @@ public class AppController {
     @PostMapping("/good/list/page/vo")
     @Cacheable(
             value = "good_app_page",
-            key = "T(com.jiaxin.aiweb.utils.CacheKeyUtils).generateKey(#appQueryRequest)",
+            key = "T(com.yupi.yuaicodemother.utils.CacheKeyUtils).generateKey(#appQueryRequest)",
             condition = "#appQueryRequest.pageNum <= 10"
     )
     public BaseResponse<Page<AppVO>> listGoodAppVOByPage(@RequestBody AppQueryRequest appQueryRequest) {

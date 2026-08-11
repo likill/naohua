@@ -1,11 +1,5 @@
 package com.jiaxin.aiweb.aop;
 
-import com.jiaxin.aiweb.annotation.AuthCheck;
-import com.jiaxin.aiweb.exception.BusinessException;
-import com.jiaxin.aiweb.exception.ErrorCode;
-import com.jiaxin.aiweb.model.entity.User;
-import com.jiaxin.aiweb.model.enums.UserRoleEnum;
-import com.jiaxin.aiweb.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +9,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.jiaxin.aiweb.annotation.AuthCheck;
+import com.jiaxin.aiweb.exception.BusinessException;
+import com.jiaxin.aiweb.exception.ErrorCode;
+import com.jiaxin.aiweb.model.entity.User;
+import com.jiaxin.aiweb.model.enums.UserRoleEnum;
+import com.jiaxin.aiweb.service.UserService;
 
 @Aspect
 @Component

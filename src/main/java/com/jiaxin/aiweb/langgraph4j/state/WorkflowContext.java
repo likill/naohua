@@ -1,14 +1,15 @@
 package com.jiaxin.aiweb.langgraph4j.state;
 
-import com.jiaxin.aiweb.langgraph4j.model.ImageCollectionPlan;
-import com.jiaxin.aiweb.langgraph4j.model.ImageResource;
-import com.jiaxin.aiweb.langgraph4j.model.QualityResult;
-import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bsc.langgraph4j.prebuilt.MessagesState;
+
+import com.jiaxin.aiweb.langgraph4j.model.ImageCollectionPlan;
+import com.jiaxin.aiweb.langgraph4j.model.ImageResource;
+import com.jiaxin.aiweb.langgraph4j.model.QualityResult;
+import com.jiaxin.aiweb.model.enums.CodeGenTypeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -4,8 +4,6 @@ import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.jiaxin.aiweb.exception.BusinessException;
-import com.jiaxin.aiweb.exception.ErrorCode;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +14,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.jiaxin.aiweb.exception.BusinessException;
+import com.jiaxin.aiweb.exception.ErrorCode;
 
 import java.io.File;
 import java.time.Duration;

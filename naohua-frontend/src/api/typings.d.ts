@@ -171,6 +171,8 @@ declare namespace API {
   type LoginUserVO = {
     id?: number
     userAccount?: string
+    phone?: string
+    email?: string
     userName?: string
     userAvatar?: string
     userProfile?: string
@@ -216,6 +218,8 @@ declare namespace API {
     id?: number
     userAccount?: string
     userPassword?: string
+    phone?: string
+    email?: string
     userName?: string
     userAvatar?: string
     userProfile?: string
@@ -229,6 +233,8 @@ declare namespace API {
   type UserAddRequest = {
     userName?: string
     userAccount?: string
+    phone?: string
+    email?: string
     userAvatar?: string
     userProfile?: string
     userRole?: string
@@ -247,6 +253,8 @@ declare namespace API {
     id?: number
     userName?: string
     userAccount?: string
+    phone?: string
+    email?: string
     userProfile?: string
     userRole?: string
   }
@@ -260,6 +268,8 @@ declare namespace API {
   type UserUpdateRequest = {
     id?: number
     userName?: string
+    phone?: string
+    email?: string
     userAvatar?: string
     userProfile?: string
     userRole?: string
@@ -268,10 +278,23 @@ declare namespace API {
   type UserVO = {
     id?: number
     userAccount?: string
+    phone?: string
+    email?: string
     userName?: string
     userAvatar?: string
     userProfile?: string
     userRole?: string
     createTime?: string
+  }
+
+  type VerificationCodeSendRequest = {
+    type?: 'phone' | 'email'
+    target?: string
+  }
+
+  type VerificationCodeLoginRequest = {
+    type?: 'phone' | 'email'
+    target?: string
+    code?: string
   }
 }

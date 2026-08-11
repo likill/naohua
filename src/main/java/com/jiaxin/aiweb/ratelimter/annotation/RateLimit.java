@@ -1,11 +1,11 @@
 package com.jiaxin.aiweb.ratelimter.annotation;
 
-import com.jiaxin.aiweb.ratelimter.enums.RateLimitType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.jiaxin.aiweb.ratelimter.enums.RateLimitType;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
